@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
 
 @Component
@@ -20,52 +18,44 @@ public class JwtUtil {
     @Value("${jwt.expiration}")
     private long expiration;
 
-    // Extract username (email)
+    // Extract email from token
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    // Extract expiration date
+    // Extract expiration
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    // Generic claim extractor
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        return claimsResolver.apply(extractAllClaims(token));
+    // Extract any field
+    public <T> T extractClaim(String token, Function<Claims, T> resolver) {
+        return resolver.apply(extractAllClaims(token));
     }
 
-    public String generateToken(String email, String password) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("pwd", password);
-        return createToken(claims, email);
+    // Generate token using only email
+    public String generateToken(String email) {
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
     }
 
+    // Validate token
     public boolean validateToken(String token, String email) {
-        String username = extractUsername(token);
-        return (username.equals(email) && !isTokenExpired(token));
+        String extractedEmail = extractUsername(token);
+        return extractedEmail.equals(email) && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
-    private String createToken(Map<String, Object> claims, String subject) {
-        Date now = new Date();
-        Date expiry = new Date(now.getTime() + expiration); // FIXED
-
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(subject)
-                .setIssuedAt(now)
-                .setExpiration(expiry)
-                .signWith(SignatureAlgorithm.HS256, secretKey) // FIXED
-                .compact();
-    }
-
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
-                .setSigningKey(secretKey) // FIXED
+                .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody();
     }

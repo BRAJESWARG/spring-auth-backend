@@ -21,29 +21,40 @@ public class AuthService {
 
     // REGISTER user
     public User register(User user) {
+
+        // Check if email already exists
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new RuntimeException("User already exists!");
         }
 
         User u = new User();
+
+        // Fix: username MUST NOT be null
+        if (user.getUsername() != null && !user.getUsername().isEmpty()) {
+            u.setUsername(user.getUsername());
+        } else {
+            u.setUsername(user.getEmail().split("@")[0]);  // auto-generate username
+        }
+
         u.setEmail(user.getEmail());
         u.setPassword(passwordEncoder.encode(user.getPassword()));
-        u.setRole("USER");  // default role
+        u.setRole("USER");
 
         return userRepository.save(u);
     }
 
     // LOGIN user
-    public String login(String email, String password) {
+    public String login(String email, String rawPassword) {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Invalid email or password"));
 
-        if (!passwordEncoder.matches(password, user.getPassword())) {
+        // validate password
+        if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
             throw new RuntimeException("Invalid email or password");
         }
 
-        // 🔹 FIXED → JwtUtil now requires email + password
-        return jwtUtil.generateToken(email, password);
+        // return JWT token
+        return jwtUtil.generateToken(user.getEmail());
     }
 }
