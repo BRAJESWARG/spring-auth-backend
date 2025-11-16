@@ -2,39 +2,48 @@ package com.example.auth.service;
 
 import com.example.auth.model.User;
 import com.example.auth.repository.UserRepository;
+import com.example.auth.security.JwtUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class AuthService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
+    @Autowired
+    private UserRepository userRepository;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtService = jwtService;
-    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-    public String register(User user) {
-        Optional<User> existing = userRepository.findByEmail(user.getEmail());
-        if (existing.isPresent()) {
-            throw new RuntimeException("Email already registered");
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    // REGISTER user
+    public User register(User user) {
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new RuntimeException("User already exists!");
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-        return "Registered";
+
+        User u = new User();
+        u.setEmail(user.getEmail());
+        u.setPassword(passwordEncoder.encode(user.getPassword()));
+        u.setRole("USER");  // default role
+
+        return userRepository.save(u);
     }
 
+    // LOGIN user
     public String login(String email, String password) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
+
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
+            throw new RuntimeException("Invalid email or password");
         }
-        return jwtService.generateToken(user.getEmail());
+
+        // 🔹 FIXED → JwtUtil now requires email + password
+        return jwtUtil.generateToken(email, password);
     }
 }

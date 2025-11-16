@@ -1,8 +1,14 @@
+/home/mihup/Documents/Documents_HP/GitHub/master/spring-auth-backend/src/main/java/com/example/auth/security/AuthenticationProviderImpl.java
+/home/mihup/Documents/Documents_HP/GitHub/master/spring-auth-backend/src/main/java/com/example/auth/dto/LoginRequest.java
 /home/mihup/Documents/Documents_HP/GitHub/master/spring-auth-backend/src/main/java/com/example/auth/AuthApplication.java
 /home/mihup/Documents/Documents_HP/GitHub/master/spring-auth-backend/src/main/java/com/example/auth/model/User.java
-/home/mihup/Documents/Documents_HP/GitHub/master/spring-auth-backend/src/main/java/com/example/auth/security/JwtAuthenticationFilter.java
+/home/mihup/Documents/Documents_HP/GitHub/master/spring-auth-backend/src/main/java/com/example/auth/dto/JwtResponse.java
 /home/mihup/Documents/Documents_HP/GitHub/master/spring-auth-backend/src/main/java/com/example/auth/security/SecurityConfig.java
-/home/mihup/Documents/Documents_HP/GitHub/master/spring-auth-backend/src/main/java/com/example/auth/controller/AuthController.java
 /home/mihup/Documents/Documents_HP/GitHub/master/spring-auth-backend/src/main/java/com/example/auth/repository/UserRepository.java
 /home/mihup/Documents/Documents_HP/GitHub/master/spring-auth-backend/src/main/java/com/example/auth/service/JwtService.java
+/home/mihup/Documents/Documents_HP/GitHub/master/spring-auth-backend/src/main/java/com/example/auth/security/CustomUserDetailsService.java
+/home/mihup/Documents/Documents_HP/GitHub/master/spring-auth-backend/src/main/java/com/example/auth/security/JwtAuthenticationFilter.java
+/home/mihup/Documents/Documents_HP/GitHub/master/spring-auth-backend/src/main/java/com/example/auth/controller/AuthController.java
+/home/mihup/Documents/Documents_HP/GitHub/master/spring-auth-backend/src/main/java/com/example/auth/security/JwtUtil.java
 /home/mihup/Documents/Documents_HP/GitHub/master/spring-auth-backend/src/main/java/com/example/auth/service/AuthService.java
+/home/mihup/Documents/Documents_HP/GitHub/master/spring-auth-backend/src/main/java/com/example/auth/config/AppConfig.java
