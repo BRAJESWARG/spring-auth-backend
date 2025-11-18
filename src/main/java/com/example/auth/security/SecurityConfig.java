@@ -29,7 +29,8 @@ public class SecurityConfig {
                 .cors(cors -> {
                 }) // use global CORS config if present
                 .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**", "/auth/**").permitAll()
+                // .requestMatchers("/api/auth/**", "/auth/**").permitAll()
+                .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
