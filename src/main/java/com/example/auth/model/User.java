@@ -3,7 +3,7 @@ package com.example.auth.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "spring_credentials") // <- updated table name
+@Table(name = "spring_credentials")
 public class User {
 
     @Id
@@ -22,7 +22,7 @@ public class User {
     @Column
     private String role;
 
-    // getters and setters
+    // Getters and setters (keep plain for simplicity)
     public Long getId() {
         return id;
     }
